@@ -287,66 +287,259 @@
 
 // distance of nearest cell having 1 in 0/1 matrix
 
-#include<iostream>
-#include<queue>
-#include<vector>
-using namespace std;
+// #include<iostream>
+// #include<queue>
+// #include<vector>
+// using namespace std;
 
-vector<vector<int>> nearest(vector<vector<int>> grid){
-    int n=grid.size();
-    int m=grid[0].size();
+// vector<vector<int>> nearest(vector<vector<int>> grid){
+//     int n=grid.size();
+//     int m=grid[0].size();
 
-    vector<vector<int>> vis(n,vector<int>(m,0));
-    vector<vector<int>> dist(n , vector<int>(m,0));
-    //coordinates and steps 
-    queue<pair<pair<int,int>,int>> q;
+//     vector<vector<int>> vis(n,vector<int>(m,0));
+//     vector<vector<int>> dist(n , vector<int>(m,0));
+//     //coordinates and steps 
+//     queue<pair<pair<int,int>,int>> q;
 
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(grid[i][j]==1){
-                q.push({{i,j},0});
-                vis[i][j]=1;
-            }
-            else vis[i][j]=0;
-        }
-    }
-    int dprow[]={-1,0,+1,0};
-    int dpcol[]={0,+1,0,-1};
+//     for(int i=0;i<n;i++){
+//         for(int j=0;j<m;j++){
+//             if(grid[i][j]==1){
+//                 q.push({{i,j},0});
+//                 vis[i][j]=1;
+//             }
+//             else vis[i][j]=0;
+//         }
+//     }
+//     int dprow[]={-1,0,+1,0};
+//     int dpcol[]={0,+1,0,-1};
 
-    while(!q.empty()){
-        int row=q.front().first.first;
-        int col= q.front().first.second;
-        int steps= q.front().second;
-        q.pop();
-        dist[row][col]=steps;
+//     while(!q.empty()){
+//         int row=q.front().first.first;
+//         int col= q.front().first.second;
+//         int steps= q.front().second;
+//         q.pop();
+//         dist[row][col]=steps;
 
-        for(int i=0;i<4;i++){
-            int nrow=row+dprow[i];
-            int ncol=col+dpcol[i];
+//         for(int i=0;i<4;i++){
+//             int nrow=row+dprow[i];
+//             int ncol=col+dpcol[i];
 
-            if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && vis[nrow][ncol]==0){
-                vis[nrow][ncol]=1;
-                q.push({{nrow,ncol},steps+1});
-            }
-        }
-    }
-    return dist;
-}
+//             if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && vis[nrow][ncol]==0){
+//                 vis[nrow][ncol]=1;
+//                 q.push({{nrow,ncol},steps+1});
+//             }
+//         }
+//     }
+//     return dist;
+// }
 
-int main(){
-    vector<vector<int>> grid{
-        {1,0,0,1},
-        {0,0,1,1},
-        {1,1,0,0}
-    };
+// int main(){
+//     vector<vector<int>> grid{
+//         {1,0,0,1},
+//         {0,0,1,1},
+//         {1,1,0,0}
+//     };
 
-    vector<vector<int>> res= nearest(grid);
+//     vector<vector<int>> res= nearest(grid);
 
-    for(auto it: res){
-        for(auto jt:it){
-            cout<<jt<<" ";
-        }
-        cout<<"\n";
-    }
-    return 0;
-}
+//     for(auto it: res){
+//         for(auto jt:it){
+//             cout<<jt<<" ";
+//         }
+//         cout<<"\n";
+//     }
+//     return 0;
+// }
+
+// =============================================================================
+
+//                      topological sort
+
+// #include<iostream>
+// #include<vector>
+// #include<stack>
+// using namespace std;
+
+// void dfs(int node, vector<int>adj[], int vis[], stack<int>& st){
+//     vis[node]=1;
+//     for(auto it:adj[node]){
+//         if(!vis[it]) dfs(it,adj,vis,st);
+//     }
+//     st.push(node);
+// }
+// vector<int> toposort(vector<int> adj[],int v){
+//     int vis[v]={0};
+//     stack<int> st;
+//     for(int i=0;i<v;i++){
+//         if(!vis[i]) dfs(i,adj,vis,st);
+//     }
+//     vector<int> res;
+//     while(!st.empty()){
+//         int node=st.top();
+//         st.pop();
+//         res.push_back(node);
+//     }
+//     return res;
+// }
+// int main(){
+//     vector<int> adj[6] = {{}, {}, {3}, {1}, {0, 1}, {0, 2}};
+//     int v=6;
+//     vector<int>ans=toposort(adj,v);
+//     for(auto node:ans){
+//         cout<<node<<", ";
+//     }
+//     cout<<endl;
+//     return 0;
+// }
+// ===================================================================
+
+//                      Kahn's algorithm
+//                  topological sort using bfs
+// #include<iostream>
+// #include<queue>
+// #include<vector>
+// using namespace std;
+
+// vector<int> kahnalgo(vector<int> adj[],int v){
+//     int indegree[v]={0};
+//     queue<int> q;
+//     for(int i=0;i<v;i++){
+//         for(auto it: adj[i]){
+//             indegree[it]++;
+//         }
+//     }
+//     for(int i=0;i<v;i++){
+//         if(indegree[i]==0) q.push(i);
+//     }
+//     vector<int>res;
+//     while(!q.empty()){
+//         int node=q.front();
+//         res.push_back(node);
+//         q.pop();
+
+//         for(auto it: adj[node]){
+//             indegree[it]--;
+//             if(indegree[it]==0) q.push(it);
+//         }
+//     }
+//     return res;
+// }
+// int main(){
+//     vector<int> adj[6] = {{}, {}, {3}, {1}, {0, 1}, {0, 2}};
+//     int v=6;
+//     vector<int>ans=kahnalgo(adj,v);
+//     for(auto node:ans){
+//         cout<<node<<", ";
+//     }
+//     cout<<endl;
+//     return 0;
+// }
+// -================================================
+//                  eventual safe nodes
+// #include<bits/stdc++.h>
+// using namespace std;
+
+// vector<int>safenode(vector<int>adj[],int v){
+//     vector<int> adjrev[v];
+//     int indegree[v]={0};
+
+//     for(int i=0;i<v;i++){
+//         // i->it and now it->i
+//         for(auto it : adj[i]){
+//             adjrev[it].push_back(i);
+//             indegree[i]++;
+//         }
+//     }
+//     queue<int> q;
+//     vector<int> safenode;
+//     for(int i=0;i<v;i++){
+//         if(indegree[i]==0){
+//             q.push(i);
+//         }
+//     }
+//     while(!q.empty()){
+//         int node=q.front();
+//         q.pop();
+//         safenode.push_back(node);
+//         for(auto it: adjrev[node]){
+//             indegree[it]--;
+//             if(indegree[it]==0) q.push(it);
+//         }
+//     }
+//     sort(safenode.begin(),safenode.end());
+//     return safenode;
+// }
+// int main() {
+
+// 	vector<int> adj[12] = {{1}, {2}, {3, 4}, {4, 5}, {6}, {6}, {7}, {}, {1, 9}, {10},
+// 		{8}, {9}
+// 	};
+// 	int V = 12;
+// 	vector<int> safeNodes = safenode(adj,V);
+
+// 	for (auto node : safeNodes) {
+// 		cout << node << " ";
+// 	}
+// 	cout << endl;
+
+// 	return 0;
+// }
+// ===================================================
+// #include<bits/stdc++.h>
+// using namespace std;
+
+// //works for mutiple components also
+// vector<int> toposort(int v, vector<int> adj[]){
+//     int indegre[v]={0};
+//     for(int i=0;i<v;i++){
+//         for(auto it: adj[i]){
+//             indegre[it]++;
+//         }
+//     }
+//     queue<int> q;
+//     for(int i=0;i<v;i++){
+//         if(indegre[i]==0) q.push(i);
+//     }
+//     vector<int>topo;
+//     while (!q.empty()){
+//         int node=q.front();
+//         q.pop();
+//         topo.push_back(node);
+//         for(auto it: adj[node]){
+//             indegre[it]--;
+//             if(indegre[it]==0) q.push(it);
+//         }
+//     }
+//     return topo;
+// }
+
+// string findorder(string dict[],int n, int k){
+//     vector<int> adj[n];
+//     for(int i=0;i<n-1;i++){
+//         string s1=dict[i];
+//         string s2=dict[i+1];
+//         int len=min(s1.length(),s2.length());
+//         for(int j=0;j<len;j++){
+//             if(s1[j]!=s2[j]){
+//                 adj[s1[j]- 'a'].push_back(s2[j] - 'a');
+//                 break;
+//             }
+//         }
+//     }
+//     vector<int> topo=toposort(k,adj);
+//     string ans="";
+//     for(auto it :topo){
+//         ans+=char(it + 'a');
+//     }
+//     return ans;
+// }
+// int main(){
+//     int n=5,k=4;
+//     string dict[]={"baa","abcd","abca","cab","cad"};
+//     string ans=findorder(dict,n,k);
+//     for(auto it: ans){
+//         cout<<it<<", ";
+//     }
+//     return 0;
+// }
+// =================================================================
