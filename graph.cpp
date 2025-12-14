@@ -543,3 +543,30 @@
 //     return 0;
 // }
 // =================================================================
+
+//longest substring without any repeating character
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int longestsubstring(string s){
+    unordered_map<char,int> mapp;
+    int maxlen=0;
+    int left=0;
+
+    for(int right=0;right< s.length();right++){
+        char ch=s[right];
+        if(mapp.find(ch)!=mapp.end() && mapp[ch]>=left){
+            left=mapp[ch]+1;
+        }
+        mapp[ch]=right;
+        maxlen=max(maxlen,right-left+1);
+    }
+    return maxlen;
+}
+int main(){
+    string s;
+    cin>>s;
+     cout << "Length of longest substring without repeating characters: "<< longestsubstring(s) << endl;
+    return 0;
+}
